@@ -4,8 +4,10 @@
   "description": "Recipes app made easy for students",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js", 
-    "server": "nodemon backend/server.js"
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm run start --prefix frontend",
+    "dev" : "concurrently \"npm run server\" \"npm run client\" "
   },
   "author": "Morris Ho",
   "license": "MIT",
@@ -16,6 +18,7 @@
     "mongoose": "^8.2.3"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "nodemon": "^3.1.0"
   }
 }
