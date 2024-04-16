@@ -5,15 +5,31 @@ const recipeSchema = mongoose.Schema({
     type: String,
     require: true 
   },
+  recipe_pic_type: [{
+    type: String,
+    allowNull: true,  
+    defaultValue: undefined
+  }],
+  recipe_pic_data: [{
+    type: Buffer,
+    allowNull: true,
+    defaultValue: undefined,
+  }],
   img:
-  {
-    data: Buffer,
-    contentType: String
-  },
+    {
+        data: Buffer,
+        contentType: String
+    },
   ingrediants: [],
   directions: [],
-  likes: Number,
-  dateCreated: Date,
+  likes: { 
+    type: Number,
+    default: 0
+  },
+  dateCreated: {
+    type: Date,
+    default: () => Date.now() + 7*24*60*60*1000
+  },
   },
   {timestamps: true},
 )

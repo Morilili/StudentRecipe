@@ -6,7 +6,7 @@ const reviewRouter = express.Router()
 // Load controller
 const { getReviews, postReview, deleteReview} = require("../controllers/review")
 
-reviewRouter.route('/').get(getReviews).post(postReview)
-reviewRouter.delete('/:review_id', deleteReview)
+reviewRouter.route('/:review_id').delete(deleteReview)
+reviewRouter.route('/:recipe_id').get(getReviews).post(postReview)
 
 module.exports = reviewRouter

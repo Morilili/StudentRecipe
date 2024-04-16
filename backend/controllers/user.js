@@ -98,15 +98,21 @@ const editUser = asyncHandler(async(req, res) => {
       token: generateToken(user._id)
     });
   }
-
-
-  
 })
 
 //@desc delete user
 //@route DELETE api/users/:id
 const deleteUser = asyncHandler(async(req,res) => {
-  res.status(200).json({message:"suc delete user"});
+  const user = await User.findById(req.params.id)
+
+  if (!user){
+    res.status(401)
+    throw new Error("User not found")
+  } else {
+    const name = user.name
+    const deletedUser = await User.findByIdAndDelete(req.params.id)
+    res.status(200).json({success: true, message: `Successfully deleted user ${name}`})
+  }
 })
 
 
