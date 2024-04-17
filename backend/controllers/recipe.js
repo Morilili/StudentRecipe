@@ -6,15 +6,18 @@ const Recipe = require("../models/recipemodels")
 //@route GET api/recipes
 const getAllRecipes = asyncHandler(async (req, res) => {
   //finding all
-  const recipes = await Recipe.find()
 
+  //for selecting certain fields of the query
+  // const recipes = await Recipe.find({}, 'name ').exec() 
+  
+  const recipes = await Recipe.find();
   res.status(200).json(recipes)
 })
 
 //@desc Getting one recipe
 //@route GET api/recipes/:recipe_id
 const getSingleRecipe = asyncHandler(async (req, res) => {
-  const recipe = await Recipe.findbyId(req.params.recipe_id)
+  const recipe = await Recipe.findById(req.params.recipe_id)
 
   if (!recipe){
     res.status(400)
