@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const reviewmodel = mongoose.Schema({
   recipe: {type: mongoose.Schema.ObjectId, ref:"Recipe"},
   body_text: String,
-  // postedBy: {type: mongoose.Schema.ObjectId, ref:'Users'},
+  postedBy: {type: mongoose.Schema.ObjectId, ref:'Users'},
   likes: { 
     type: Number,
     default: 0

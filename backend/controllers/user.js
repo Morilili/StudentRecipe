@@ -64,6 +64,7 @@ const loginUser = asyncHandler ( async (req, res) => {
 
   if (user && (await bcrypt.compare(password, user.password))){
     res.status(200).json({
+      message: "Login Success",
       _id: user.id,
       name: user.name,
       email: user.email,
@@ -81,21 +82,27 @@ const editUser = asyncHandler(async(req, res) => {
   const user = await User.findById(req.params.id)
   const { name, password } = req.body
 
-  // if (!req.user){
-  //   res.status(401)
-  //   throw new Error("User not found")
-  // }
+  if (!user){
+    res.status(401)
+    throw new Error("User not found")
+  }
+
+  if (req.body.password){
+    const salt = await bcrypt.genSalt()
+    const hashedpass = await bcrypt.hash(password, salt)
+    req.body.password = hashedpass
+  }
 
   if (!name && !password){
     res.status(400)
     throw new Error("Enter information")
   } else {
-    const updatedname = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    const updated = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
     res.status(200).json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id)
+      _id: updated.id,
+      name: updated.name,
+      email: updated.email,
+      token: generateToken(updated._id)
     });
   }
 })

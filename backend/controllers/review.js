@@ -23,7 +23,7 @@ const postReview = asyncHandler(async (req, res) => {
   const review = await Review.create({
     recipe: req.params.recipe_id,
     body_text: body_text,
-    // postedBy: req.user.id //later for authentication
+    postedBy: req.user.id //later for authentication
   })
 
   res.status(200).json({message: "post suced"})
@@ -37,11 +37,13 @@ const deleteReview = asyncHandler(async (req, res) => {
   if (!review){
     res.status(400)
     throw new Error("Review not found")
+  } else if (review.postedBy != req.user.id) { //ensuring that the user is the one who posted the review
+    res.status(401)
+    throw new Error("Not Authorized")
   } else {
     const deletedReview = await Review.findByIdAndDelete(req.params.review_id)
     res.status(200).json({message: "Successfully deleted review"})
   }
-
 })
 
 module.exports = {
