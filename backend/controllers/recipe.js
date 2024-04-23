@@ -1,6 +1,7 @@
 const express = require('express')
 const asyncHandler = require('express-async-handler')
-const Recipe = require("../models/recipemodels")
+const Recipe = require("../models/recipemodels");
+const recipemodels = require('../models/recipemodels');
 
 //@desc Getting all recipes
 //@route GET api/recipes
@@ -70,13 +71,14 @@ const updateRecipe = asyncHandler(async (req, res) => {
   // console.log(req.files.length)
   // iterator function to retrieve all image type and data
   let i = 0;
-  while(i != req.files.length){
-    recipe_pic_type.push(req.files[i].mimetype)
-    recipe_pic_data.push(req.files[i].buffer)
-    i++
+  if (req.files){
+    while(i != req.files.length){
+      recipe_pic_type.push(req.files[i].mimetype)
+      recipe_pic_data.push(req.files[i].buffer)
+      i++
+    }
   }
   
-  console.log(recipe_pic_type)
   const recipe = await Recipe.findById(req.params.recipe_id)
 
   if (!recipe){
@@ -93,6 +95,62 @@ const updateRecipe = asyncHandler(async (req, res) => {
   await recipe.save();
 
   res.status(200).json({message: "Updated successfully"})
+})
+
+//@desc Updating the likes of a recipe
+//@route PUT api/recipes/:recipe_id/like
+const likeRecipe = asyncHandler(async(req,res) => {
+  const recipe = await Recipe.findById(req.params.recipe_id)
+  const user = req.user.id
+  
+  if (!recipe){
+    res.status(400)
+    throw new Error('Recipe not found')
+  }
+  
+  if (!(recipe.dislikes.indexOf(user))){
+    res.status(400)
+    throw new Error("Disliked already")
+    
+
+  } else if (recipe.likes.indexOf(user)) { //making sure user does not like and dislike at the same time
+    recipe.likes.push(user)
+    res.status(200).json({message: "Liked"})
+  } else {
+    const index = recipe.likes.indexOf(user)
+    recipe.likes.splice(index)
+    res.status(200).json({message: "Unliked"})
+  }
+  
+  await recipe.save()
+})
+
+//@desc Updating the dislikes of a recipe
+//@route PUT api/recipes/:recipe_id/dislike
+const dislikeRecipe = asyncHandler(async(req,res) => {
+  const recipe = await Recipe.findById(req.params.recipe_id)
+  const user = req.user.id
+  
+  
+  if (!recipe){
+    res.status(400)
+    throw new Error('Recipe not found')
+  }
+  
+  if (!(recipe.likes.indexOf(user))){
+    res.status(400)
+    throw new Error("Liked already")
+
+  } else if (recipe.dislikes.indexOf(user)) { //making sure user does not like and dislike at the same time
+    recipe.dislikes.push(user)
+    res.status(200).json({message: "Disliked"})
+  } else {
+    const index = recipe.dislikes.indexOf(user)
+    recipe.dislikes.splice(index)
+    res.status(200).json({message: "Undisliked"})
+  }
+  
+  await recipe.save()
 })
 
 //@desc Delete a single recipe
@@ -122,5 +180,7 @@ module.exports = {
   getSingleRecipe,
   createNewRecipe,
   updateRecipe,
-  deleteRecipe
+  likeRecipe,
+  dislikeRecipe,
+  deleteRecipe,
 }
