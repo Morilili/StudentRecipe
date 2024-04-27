@@ -76,6 +76,15 @@ const loginUser = asyncHandler ( async (req, res) => {
   }
 })
 
+//@desc Authenticate a user
+//@route POST api/users/logout
+const logoutUser = asyncHandler( async(req,res) => {
+  res.status(200).json({
+      success: true, 
+      message: 'Logout Successful'
+  })
+})
+
 //@desc Edit user details
 //@route PUT api/users/edit/:id
 const editUser = asyncHandler(async(req, res) => {
@@ -122,21 +131,19 @@ const deleteUser = asyncHandler(async(req,res) => {
   }
 })
 
-
-
 // //@desc Get user
 // //@route POST api/users/me
-// const getMe = asyncHandler(async (req, res) => {
-//   const {_id, name, email} = await User.findById(req.user.id)
-
-//   res.status(200).json(req.user)
-// })
+const getMe = asyncHandler(async (req, res) => {
+  const {_id, name, email} = await User.findById(req.user.id)
+  res.status(200).json(req.user)
+})
 
 
 module.exports = {
   registerUser, 
   loginUser,
-  // getMe,
+  getMe,
   editUser,
-  deleteUser
+  deleteUser,
+  logoutUser
 }
