@@ -12,7 +12,11 @@ const getAllRecipes = asyncHandler(async (req, res) => {
   // const recipes = await Recipe.find({}, 'name ').exec() 
   
   const recipes = await Recipe.find();
-  res.status(200).json(recipes)
+  res.status(200).json({
+    status: "success",
+    data:recipes,
+    message: "Get all recipes successsful"
+  })
 })
 
 //@desc Getting one recipe
@@ -21,13 +25,15 @@ const getSingleRecipe = asyncHandler(async (req, res) => {
   const recipe = await Recipe.findById(req.params.recipe_id)
 
   if (!recipe){
-    res.status(400)
-    throw new Error('Recipe not found')
+    res.status(404).json({message: "Recipe not found"})
+    next(new Error("Recipe not found"))
   }
-  res.status(200).json(recipe)
+  res.status(200).json({
+    status: "success",
+    data: recipe,
+    message: `Get recipe ${recipe.name} successful`
+  })
 })
-
-
 
 //@desc Create a new recipe
 //@route POST api/recipes/
@@ -46,8 +52,8 @@ const createNewRecipe = asyncHandler(async (req, res) => {
   }
 
   if (!name || !ingrediants || !directions){
-    res.status(400)
-    throw new Error("Please provide all details")
+    res.status(400).json({message: "Please provide all details"})
+    next(new Error("Please provide all details"))
   }
 
   const newRecipe = await Recipe.create({
@@ -58,7 +64,11 @@ const createNewRecipe = asyncHandler(async (req, res) => {
     recipe_pic_data: recipe_pic_data ? recipe_pic_data : undefined
   })
   
-  res.status(201).json({message: "Successfully posted recipe"})
+  res.status(201).json({
+    status: "success",
+    data: newRecipe,
+    message: "Successfully posted recipe"
+  })
 })
 
 //@desc Updating a single recipe detail
@@ -82,8 +92,8 @@ const updateRecipe = asyncHandler(async (req, res) => {
   const recipe = await Recipe.findById(req.params.recipe_id)
 
   if (!recipe){
-    res.status(400)
-    throw new Error('Recipe not found')
+    res.status(404).json({message: "Recipe not found"})
+    next(new Error("Recipe not found"))
   }
   
   if (name) recipe.name = name;
@@ -94,7 +104,11 @@ const updateRecipe = asyncHandler(async (req, res) => {
 
   await recipe.save();
 
-  res.status(200).json({message: "Updated successfully"})
+  res.status(200).json({
+    status: "success",
+    data: null,
+    message: "Updated successfully"
+  })
 })
 
 //@desc Updating the likes of a recipe
@@ -104,22 +118,29 @@ const likeRecipe = asyncHandler(async(req,res) => {
   const user = req.user.id
   
   if (!recipe){
-    res.status(400)
-    throw new Error('Recipe not found')
+    res.status(404).json({message: "Recipe not found"})
+    next(new Error("Recipe not found"))
   }
   
   if (!(recipe.dislikes.indexOf(user))){
-    res.status(400)
-    throw new Error("Disliked already")
+    res.status(400).json({message: "Disliked already"})
+    next(new Error("Disliked already"))
     
-
   } else if (recipe.likes.indexOf(user)) { //making sure user does not like and dislike at the same time
     recipe.likes.push(user)
-    res.status(200).json({message: "Liked"})
+    res.status(200).json({
+      status: "success",
+      data: null,
+      message: "Liked successfully"
+    })
   } else {
     const index = recipe.likes.indexOf(user)
     recipe.likes.splice(index)
-    res.status(200).json({message: "Unliked"})
+    res.status(200).json({
+      status: "success",
+      data: null,
+      message: "Unliked successfully"
+    })
   }
   
   await recipe.save()
@@ -131,25 +152,30 @@ const dislikeRecipe = asyncHandler(async(req,res) => {
   const recipe = await Recipe.findById(req.params.recipe_id)
   const user = req.user.id
   
-  
   if (!recipe){
-    res.status(400)
-    throw new Error('Recipe not found')
+    res.status(404).json({message: "Recipe not found"})
+    next(new Error("Recipe not found"))
   }
   
   if (!(recipe.likes.indexOf(user))){
-    res.status(400)
-    throw new Error("Liked already")
+    res.status(400).json({message: "Liked already"})
+    next(new Error("Liked already"))
 
   } else if (recipe.dislikes.indexOf(user)) { //making sure user does not like and dislike at the same time
-    recipe.dislikes.push(user)
-    res.status(200).json({message: "Disliked"})
+    res.status(200).json({
+      status: "success",
+      data: null,
+      message: "Disliked successfully"
+    })
   } else {
     const index = recipe.dislikes.indexOf(user)
     recipe.dislikes.splice(index)
-    res.status(200).json({message: "Undisliked"})
+    res.status(200).json({
+      status: "success",
+      data: null,
+      message: "Undisliked successfully"
+    })
   }
-  
   await recipe.save()
 })
 
@@ -159,11 +185,14 @@ const deleteRecipe = asyncHandler(async (req, res) => {
   const recipe = await Recipe.findById(req.params.recipe_id)
 
   if (!recipe){
-    res.status(401)
-    throw new Error("Recipe not found")
+    res.status(404).json({message: "Recipe not found"})
+    next(new Error("Recipe not found"))
   } else {
     const deletedrecipe = await Recipe.findByIdAndDelete(req.params.recipe_id)
-    res.status(200).json({success: true, message: `Successfully deleted recipe`})
+    res.status(200).json({
+      status: "success",
+      data:null,
+      message: `Successfully deleted recipe ${deletedrecipe.name}`})
   }
 })
 
@@ -171,8 +200,6 @@ const deleteRecipe = asyncHandler(async (req, res) => {
 //
 //now can only append to exisitng images, can be easily changed to replace all
 //will be seeing how updating works later for now like this. 
-//
-
 //
 
 module.exports = {
