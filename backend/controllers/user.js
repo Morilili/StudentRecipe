@@ -108,22 +108,26 @@ const editUser = asyncHandler(async(req, res) => {
     req.body.password = hashedpass
   }
 
-  if (!name && !password){
+  if (name == '' && password == ''){
     res.status(400).send({message: "Enter information"})
     next(new Error("Enter information"))
-  } else {
-    const updated = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
-    res.status(200).json({
-      status: "success",
-      data: {
-        _id: updated.id,
-        name: updated.name,
-        email: updated.email,
-        token: generateToken(updated._id)
-      },
-      message: "Updated user"
-    });
+  } else if (name  == '') {
+    delete req.body.name
+  } else if (password == '') {
+    delete req.body.password
   }
+
+  const updated = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  res.status(200).json({
+    status: "success",
+    data: {
+      _id: updated.id,
+      name: updated.name,
+      email: updated.email,
+      token: generateToken(updated._id)
+    },
+    message: "Updated user information"
+  });
 })
 
 //@desc delete user
