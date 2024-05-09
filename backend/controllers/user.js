@@ -13,7 +13,7 @@ const generateToken = (id) => {
 
 //@desc Register new user
 //@route POST api/users
-const registerUser = asyncHandler(async(req, res) => {
+const registerUser = asyncHandler(async(req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password){
@@ -93,7 +93,7 @@ const logoutUser = asyncHandler( async(req,res) => {
 
 //@desc Edit user details
 //@route PUT api/users/edit/:id
-const editUser = asyncHandler(async(req, res) => {
+const editUser = asyncHandler(async(req, res, next) => {
   const user = await User.findById(req.params.id)
   const { name, password } = req.body
 
@@ -125,7 +125,7 @@ const editUser = asyncHandler(async(req, res) => {
       name: updated.name,
       email: updated.email,
       token: generateToken(updated._id)
-    },
+    }, 
     message: "Updated user information"
   });
 })
