@@ -5,23 +5,10 @@ const recipeSchema = mongoose.Schema({
     type: String,
     require: true 
   },
-  recipe_pic_type: [{
-    type: String,
-    allowNull: true,  
-    defaultValue: undefined
-  }],
-  recipe_pic_data: [{
-    type: Buffer,
-    allowNull: true,
-    defaultValue: undefined,
-  }],
-  img:
-    {
-        data: Buffer,
-        contentType: String
-    },
+  images: [],
   ingrediants: [],
   directions: [],
+  
   // the following way is probably not the best practice as using a model for likes statistics should be more efficient?
   likes: [], // list of people who liked
   dislikes: [], // list of people who disliked

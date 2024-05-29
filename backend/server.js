@@ -12,6 +12,7 @@ const app = express();
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
+app.use("/backend/uploads",express.static(path.join(__dirname + "/uploads")));
 
 app.use(errorHandler)
 app.use('/api/recipes', require('./routes/recipeRoutes'));

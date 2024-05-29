@@ -7,11 +7,8 @@ const recipemodels = require('../models/recipemodels');
 //@route GET api/recipes
 const getAllRecipes = asyncHandler(async (req, res) => {
   //finding all
+  const recipes = await Recipe.find()
 
-  //for selecting certain fields of the query
-  // const recipes = await Recipe.find({}, 'name ').exec() 
-  
-  const recipes = await Recipe.find();
   res.status(200).json({
     status: "success",
     data:recipes,
@@ -39,17 +36,9 @@ const getSingleRecipe = asyncHandler(async (req, res) => {
 //@route POST api/recipes/
 const createNewRecipe = asyncHandler(async (req, res) => {
   const { name, ingrediants, directions } = req.body
-  const recipe_pic_type = [] //req.files.mimetype  //string 
-  const recipe_pic_data = [] //req.files.buffer // array buffer
-  
-  // console.log(req.files.length)
-  // iterator function to retrieve all image type and data
-  let i = 0;
-  while(i != req.files.length){
-    recipe_pic_type.push(req.files[i].mimetype)
-    recipe_pic_data.push(req.files[i].buffer)
-    i++
-  }
+
+  const recipe_pics = [];
+  req.files.forEach((pic) => {recipe_pics.push(pic.filename)})
 
   if (!name || !ingrediants || !directions){
     res.status(400).json({message: "Please provide all details"})
@@ -60,8 +49,7 @@ const createNewRecipe = asyncHandler(async (req, res) => {
     name, 
     ingrediants, 
     directions, 
-    recipe_pic_type: recipe_pic_type ? recipe_pic_type : undefined, 
-    recipe_pic_data: recipe_pic_data ? recipe_pic_data : undefined
+    images: recipe_pics
   })
   
   res.status(201).json({
@@ -75,19 +63,9 @@ const createNewRecipe = asyncHandler(async (req, res) => {
 //@route PUT api/recipes/:recipe_id
 const updateRecipe = asyncHandler(async (req, res) => {
   const { name, ingrediants, directions } = req.body
-  const recipe_pic_type = [] //req.files.mimetype  //string 
-  const recipe_pic_data = [] //req.files.buffer // array buffer
-  
-  // console.log(req.files.length)
-  // iterator function to retrieve all image type and data
-  let i = 0;
-  if (req.files){
-    while(i != req.files.length){
-      recipe_pic_type.push(req.files[i].mimetype)
-      recipe_pic_data.push(req.files[i].buffer)
-      i++
-    }
-  }
+  const new_images = []
+
+  if (req.files) req.files.forEach((pic) => {new_images.push(pic.filename)})
   
   const recipe = await Recipe.findById(req.params.recipe_id)
 
@@ -95,14 +73,13 @@ const updateRecipe = asyncHandler(async (req, res) => {
     res.status(404).json({message: "Recipe not found"})
     next(new Error("Recipe not found"))
   }
-  
+
   if (name) recipe.name = name;
   if (ingrediants) recipe.ingrediants = ingrediants;
   if (directions) recipe.directions = directions;
-  if (recipe_pic_type) recipe.recipe_pic_type = recipe.recipe_pic_type.concat(recipe_pic_type);
-  if (recipe_pic_data) recipe.recipe_pic_data = recipe.recipe_pic_data.concat(recipe_pic_data);
+  if (new_images.length > 0) recipe.images = recipe.images.concat(new_images);
 
-  await recipe.save();
+  await recipe.save(); 
 
   res.status(200).json({
     status: "success",
