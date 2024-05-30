@@ -38,6 +38,11 @@ const editme = async(user_id, userdata, token) => {
     },
   }
   const response = await axios.put(API_URL + 'edit/' + user_id, userdata, config)
+  
+  if (response.data) {
+    localStorage.removeItem('user')
+    localStorage.setItem('user', JSON.stringify(response.data))
+  }
   return response.data
 }
 

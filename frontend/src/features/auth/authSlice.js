@@ -94,7 +94,7 @@ export const authSlice = createSlice({
         toast.success(action.payload.message)
         state.isLoading = false
         state.isAuthorized = true
-        state.user = action.payload.data
+        state.user = action.payload
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false
@@ -109,7 +109,7 @@ export const authSlice = createSlice({
         toast.success(action.payload.message)
         state.isLoading = false
         state.isAuthorized = true
-        state.user = action.payload.data
+        state.user = action.payload
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false
@@ -149,7 +149,7 @@ export const authSlice = createSlice({
       })
       .addCase(deleteaccount.fulfilled, (state, action) => {
         toast.success(action.payload.message)
-        state.isAuthorized = true
+        state.isAuthorized = false
         state.user = null
         state.isLoading  = false
       }) 
