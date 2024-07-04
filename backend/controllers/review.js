@@ -17,13 +17,14 @@ const getReviews = asyncHandler(async (req, res) => {
 
 //@desc Posting a review for the particualar recipe
 //@route POST api/reviews/:recipe_id
-const postReview = asyncHandler(async (req, res) => {
+const postReview = asyncHandler(async (req, res, next) => {
   const { body_text } = req.body
 
   if(!body_text){
     res.status(400).json({message: "Please enter all review details"})
     next(new Error("Please enter all review details"))
   }
+  
   const review = await Review.create({
     recipe: req.params.recipe_id,
     body_text: body_text,
