@@ -8,10 +8,6 @@ const recipeSchema = mongoose.Schema({
   images: [],
   ingrediants: [],
   directions: [],
-  
-  // the following way is probably not the best practice as using a model for likes statistics should be more efficient?
-  likes: [], // list of people who liked
-  dislikes: [], // list of people who disliked
   dateCreated: {
     type: Date,
     default: () => Date.now() + 7*24*60*60*1000
