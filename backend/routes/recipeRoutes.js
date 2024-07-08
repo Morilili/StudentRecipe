@@ -7,6 +7,7 @@ const { removereviews } = require("../middleware/remove")
 
 // Load controllers
 const { getAllRecipes, getSingleRecipe, createNewRecipe, updateRecipe, deleteRecipe, likeRecipe, dislikeRecipe} = require("../controllers/recipe")
+const { getLikeStatus, updateLikeRecipe } = require("../controllers/recipelike")
 const { errorHandler } = require("../middleware/error")
 
 // Image processing
@@ -24,8 +25,7 @@ const upload = multer({ storage: storage })
 
 recipeRouter.route('/').get(getAllRecipes).post(upload.any("image"), adminprotect, createNewRecipe)
 recipeRouter.route('/:recipe_id').get(getSingleRecipe).put(adminprotect, upload.any("image"), updateRecipe).delete(adminprotect, removereviews, deleteRecipe)
-recipeRouter.route('/:recipe_id/like').put(userprotect,likeRecipe)
-recipeRouter.route('/:recipe_id/dislike').put(userprotect, dislikeRecipe)
+recipeRouter.route('/:recipe_id/recipelikestatus').get(userprotect, getLikeStatus).put(userprotect, updateLikeRecipe)
 
 module.exports = recipeRouter
 

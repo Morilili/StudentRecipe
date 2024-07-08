@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Header from './components/Header'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -20,8 +21,7 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} /> 
             <Route path="/:user_id/editme" element={<Editme />} />
-            {/* <Route path='/recipe' element={<Recipe />} /> */}
-            <Route path='/recipe/:recipe_id' element={<RecipeDisplay />} />
+            <Route path='/recipes/:recipe_id' element={<RecipeDisplay/>} />
           </Routes>
           <ToastContainer autoClose={1500} />
         </div>

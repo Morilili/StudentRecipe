@@ -4,6 +4,7 @@ const reviewmodel = mongoose.Schema({
   recipe: {type: mongoose.Schema.ObjectId, ref:"Recipe"},
   body_text: String,
   postedBy: {type: mongoose.Schema.ObjectId, ref:'Users'},
+  postedByName: String,
   dateCreated: {
     type: Date,
     default: () => Date.now() + 7*24*60*60*1000

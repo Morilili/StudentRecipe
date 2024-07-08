@@ -12,7 +12,7 @@ const getReviews = asyncHandler(async (req, res) => {
     status: "success",
     data: reviews,
     message: "Get all reviews success"
-})
+  })
 })
 
 //@desc Posting a review for the particualar recipe
@@ -28,14 +28,16 @@ const postReview = asyncHandler(async (req, res, next) => {
   const review = await Review.create({
     recipe: req.params.recipe_id,
     body_text: body_text,
-    postedBy: req.user.id //later for authentication
+    postedBy: req.user.id, //later for authentication
+    postedByName: req.user.name
   })
 
   res.status(200).json({
     status: "success",
     data: {
       body_text: review.body_text,
-      postedBy: req.user.id //name??? 
+      postedBy: req.user.id,
+      postedByName: req.user.name
     },
     message: "Post succeed"
   })
