@@ -18,6 +18,9 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "User"
   },
+  saved: [{
+    type: mongoose.Schema.ObjectId, ref:"Recipe"
+  }],
   },
   {
     timestamps: true
