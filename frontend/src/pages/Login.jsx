@@ -87,7 +87,7 @@ function Login() {
           </div>
 
           <div className='form-group'>
-            <button type='submit' className='btn btn-block'>
+            <button type='submit' className='.btn btn-block'>
               Submit
             </button>
           </div>
