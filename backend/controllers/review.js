@@ -7,7 +7,12 @@ const User = require('../models/usermodels')
 //@desc Getting the reviews for the particualar recipe
 //@route GET api/reviews/:recipe_id
 const getReviews = asyncHandler(async (req, res) => {
-  const reviews = await Review.find({recipe: req.params.recipe_id})
+  const offset = parseInt(req.query.offset) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const reviews = await Review.find({recipe: req.params.recipe_id}).skip(offset)
+  .limit(limit)
+  
   res.status(200).json({
     status: "success",
     data: reviews,
