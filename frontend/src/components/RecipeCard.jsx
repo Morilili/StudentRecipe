@@ -1,22 +1,26 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useRevalidator } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+
 
 function RecipeCard({ recipe }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+
+  const onClick = () => {
+    navigate("/recipes/" + recipe._id)
+  }
   return (
-    // <div className='RecipeCard' onClick={() => {
-    //   navigate("/recipes/" + id)
-    // }}>
-    <div>
-      {/* <div style={{backgroundImage: `url(${image})`}} className='bgImage'/>
-      <h1 className='projectTitle'>{name}</h1> */}
-      {/* <div className="item-card">
-            <img src={item.imageUrl} alt={item.name} />
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <span>${item.price}</span>
-        </div> */}
-      card
+    <div className='card' onClick={onClick}>
+      <div>
+        <div className='bgImage'/>
+          <img           
+            src={`/backend/uploads/${recipe.images[0]}`}
+            height={100}
+            width={100}
+          />
+          <h3>{recipe.name}</h3>
+      </div>
     </div>
   )
 }
