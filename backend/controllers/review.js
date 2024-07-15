@@ -12,11 +12,23 @@ const getReviews = asyncHandler(async (req, res) => {
 
   const reviews = await Review.find({recipe: req.params.recipe_id}).skip(offset)
   .limit(limit)
-  
+
   res.status(200).json({
     status: "success",
     data: reviews,
     message: "Get all reviews success"
+  })
+})
+
+//@desc Getting the number of reviews for the particular recipe
+//route GET api/reviews/:recipe_id/num
+const getnumReviews = asyncHandler(async(req,res) => {
+  const num = await Review.countDocuments({recipe: req.params.recipe_id})
+
+  res.status(200).json({
+    status: "success",
+    data: num,
+    message:"Get number of reviews success"
   })
 })
 
@@ -71,6 +83,7 @@ const deleteReview = asyncHandler(async (req, res) => {
 
 module.exports = {
   getReviews,
+  getnumReviews,
   postReview,
   deleteReview,
 }

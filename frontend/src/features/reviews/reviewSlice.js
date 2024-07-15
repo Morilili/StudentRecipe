@@ -4,6 +4,7 @@ import { ToastContainer, toast} from 'react-toastify'
 
 const initialState = {
   reviews: [],
+  count: 0,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -11,9 +12,20 @@ const initialState = {
 }
 
 export const getReviews = createAsyncThunk('reviews/getAll',
-  async({recipe_id, index}, thunkAPI) => {
+  async({recipe_id, index, count}, thunkAPI) => {
     try{
-      return await reviewService.getReviews(recipe_id, index)
+      return await reviewService.getReviews(recipe_id, index, count)
+    } catch (error) {
+      const message = error.response.data.message || error.message
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const getnumReviews = createAsyncThunk('reviews/getnum',
+  async({recipe_id}, thunkAPI) => {
+    try{
+      return await reviewService.getnumReviews(recipe_id)
     } catch (error) {
       const message = error.response.data.message || error.message
       return thunkAPI.rejectWithValue(message)
@@ -62,6 +74,18 @@ export const reviewSlice = createSlice({
         state.reviews = [...state.reviews, ...action.payload.data]
       })
       .addCase(getReviews.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      }).addCase(getnumReviews.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getnumReviews.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.count = action.payload.data
+      })
+      .addCase(getnumReviews.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

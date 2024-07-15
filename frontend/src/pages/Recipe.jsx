@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import RecipeCard from '../components/RecipeCard'
 import { ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { getRecipes, reset} from '../features/recipes/recipeSlice';
+import { getRecipes, resetRecipe} from '../features/recipes/recipeSlice';
 import Spinner from '../components/Spinner'
 
 function Recipe(){
@@ -24,7 +24,7 @@ function Recipe(){
     dispatch(getRecipes())
 
     return () => {
-      dispatch(reset())
+      dispatch(resetRecipe())
     }
   }, [navigate, isError, message, dispatch])
 

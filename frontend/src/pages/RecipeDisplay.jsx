@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, {Suspense, useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom';
 import ReviewCard from '../components/ReviewCard';
 import { ToastContainer, toast} from 'react-toastify'
-import { getSingleRecipe, updateLikeStatus, reset, saveRecipe, getLikeStatus, getSaveRecipe} from '../features/recipes/recipeSlice';
-import { getReviews, postReview } from '../features/reviews/reviewSlice';
+import { getSingleRecipe, updateLikeStatus, resetRecipe, saveRecipe, getLikeStatus, getSaveRecipe} from '../features/recipes/recipeSlice';
+import { getReviews, postReview, resetReview, getnumReviews } from '../features/reviews/reviewSlice';
+import InfiniteScroll from "react-infinite-scroll-component"
 import Spinner from '../components/Spinner'
+import Loader from '../components/Loader'
 
 function RecipeDisplay() {
   const { user } = useSelector((state) => state.auth)
@@ -15,7 +17,7 @@ function RecipeDisplay() {
   const dispatch = useDispatch()
   const likes = useSelector((state) => state.recipes.likes)
   const saved = useSelector((state) => state.recipes.usersaved)
-
+  
   // Responsible for the saved recipes
 
   useEffect(() => {
@@ -100,15 +102,42 @@ function RecipeDisplay() {
   const closeModal = () => {
     setActiveModalId(null);
   };
-  
-  const handleReviewDelete = () => {
-    // Code to refresh reviews or handle the state change
-    console.log('Review was deleted. Refreshing reviews...');
+
+
+  // inifinite scrolling
+  const [hasMore, setHasMore] = useState(true);
+  const [index, setIndex] = useState(1);
+  const count = useSelector((state) => state.reviews.count)
+  //asked copilot and said useeffect runs twice in develpment strict mode
+  // and this the block in return doesnt r un twice so ig this is a temp solution?
+
+
+  //probably hacking the solution here but worth it for the reverse chronological reviews
+  useEffect(() =>{
+    dispatch(getnumReviews({recipe_id: recipe_id}))
+    if (count < 6) setHasMore(false)
+    if (count != 0) dispatch(getReviews({recipe_id: recipe_id, index: 0, count: count}))
+      
+    return () => {
+      
+    }
+  }, [count])
+
+  const fetchMoreData = () => {
+    
+    dispatch(getReviews({recipe_id: recipe_id, index: index, count: count}))
+      .then((res) => {
+        // Assuming the reducer updates the state, no need to setItems here
+        
+        var checker = index
+        const hasNewItems = (checker+1) *6 < count;
+        
+        setHasMore(hasNewItems);
+      })
+      .catch((err) => console.log(err));
+      
+    setIndex((prevIndex) => prevIndex + 1);
   };
-
-
-
-
 
   //main state handling
   const {single, isLoading, isError, message } = useSelector(
@@ -125,10 +154,9 @@ function RecipeDisplay() {
     }
     
     dispatch(getSingleRecipe(recipe_id))
-    dispatch(getReviews(recipe_id))
-
     return () => {
-      dispatch(reset())
+      dispatch(resetRecipe())
+      dispatch(resetReview())
     }
   }, [isError, message, dispatch])
 
@@ -137,6 +165,11 @@ function RecipeDisplay() {
   //simplifying the jsx
   const recipe = single.data
 
+
+  //lazy loading 
+  // const ReviewCard = React.lazy(() => import('../components/ReviewCard'))
+
+  
   if (isLoading) {
     return <Spinner />
   }
@@ -223,13 +256,23 @@ function RecipeDisplay() {
             </button>
           )
         }
-        
-        {reviews.data && reviews.data.length > 0 ? (
-          <div>
-          {reviews.data.map((review) => (
-            <ReviewCard key={review.id} user={user} review={review} recipe_id={recipe_id} onReviewDelete={handleReviewDelete} openModal={openModal} closeModal={closeModal} activeModalId={activeModalId}/>
-          ))}
-          </div>
+        {/* {console.log(reviews)} */}
+        {reviews && reviews.length > 0 ? (
+          <InfiniteScroll
+          dataLength={reviews.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<Loader />}
+          threshold={2}
+          >
+          {/* <Suspense fallback={<div>Loading reviews...</div>}> Wrap reviews in Suspense with a fallback */}
+            <div>
+              {reviews && reviews.map((review) => (
+                <ReviewCard key={review.id} user={user} review={review} recipe_id={recipe_id} openModal={openModal} closeModal={closeModal} activeModalId={activeModalId}/>
+              ))}
+            </div>
+          {/* </Suspense> */}
+          </InfiniteScroll>
           ) : (
             <h5> No reviews have been left for this recipe</h5>
           )
