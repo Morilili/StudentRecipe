@@ -115,7 +115,8 @@ function RecipeDisplay() {
   //probably hacking the solution here but worth it for the reverse chronological reviews
   useEffect(() =>{
     dispatch(getnumReviews({recipe_id: recipe_id}))
-    if (count < 6) setHasMore(false)
+    
+    count < 6 ? setHasMore(false): setHasMore(true)
     if (count != 0) dispatch(getReviews({recipe_id: recipe_id, index: 0, count: count}))
       
     return () => {
