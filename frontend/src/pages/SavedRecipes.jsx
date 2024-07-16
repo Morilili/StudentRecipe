@@ -3,7 +3,10 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import RecipeCard from '../components/RecipeCard'
 import { getRecipes, getSaveRecipe, resetRecipe } from '../features/recipes/recipeSlice';
+import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from '../components/Spinner'
+import Loader from '../components/Loader'
+
 const SavedRecipes = () => {
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate()
@@ -21,25 +24,53 @@ const SavedRecipes = () => {
     dispatch(getSaveRecipe('lmao'));
   }, []); 
 
+  // inifinite scrolling
+  // const [items, setItems] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [index, setIndex] = useState(1);
+
+  const fetchMoreData = () => {
+    // dispatch(resetRecipe())
+    // dispatch(getRecipes({index: index}))
+    // setHasMore(true)
+    dispatch(getRecipes({index: index}))
+      .then((res) => {
+        res.payload.data.length > 0 ? setHasMore(true) : setHasMore(false);
+      })
+      .catch((err) => console.log(err));
+
+    setIndex((prevIndex) => prevIndex + 1);
+  };
+
+
   useEffect(() => {
-    
-    // if (saved_id.length > 0 ) {
-    //   dispatch(getRecipes({ params: saved_id, index: 0 }))
-    // }
-    if (saved_id.length > 0 ) {
+    if (saved_id.length > 0  && saved_id.length <= 10 ) {
+      setHasMore(false)
+      dispatch(getRecipes({ params: saved_id, index: 0 }))
+    } else if (saved_id.length > 0){
       dispatch(getRecipes({ params: saved_id, index: 0 }))
     }
 
     return () => {
       dispatch(resetRecipe())
     }
-  }, [saved_id  ])
+  }, [saved_id])
   
-  if (isLoading) {
-    return <Spinner/>
-  }
+  
 
   return (
+    <InfiniteScroll
+      dataLength={recipes.length}
+      next={fetchMoreData}
+      hasMore={hasMore}
+      loader={<Loader />}
+      scrollThreshold={0.9}
+      endMessage={
+        <p style={{ textAlign: 'center' }}>
+          <b>This is the end. Go save more tasty recipes :p</b>
+        </p>
+      }
+    >
     <div>
       <h1>Hello {user.data.name}</h1>
       <h3>Here are your saved recipes:</h3>
@@ -56,6 +87,7 @@ const SavedRecipes = () => {
         )}
       </section>
     </div>
+    </InfiniteScroll>
   );
 };
 
