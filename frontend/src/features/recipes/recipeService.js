@@ -2,13 +2,14 @@ import axios from 'axios'
 
 const API_URL = '/api/recipes/'
 
-const getRecipes = async(params = []) => {
-  var url = API_URL
+const getRecipes = async(params, index) => {
+  var url = API_URL + '?'
   if (params.length != 0){
     const paramsString = params.join(',')
-    url += `?subset=${paramsString}`
+    url += `subset=${paramsString}`
   }
   
+  url += `&offset=${index}0&limit=10`
   const response = await axios.get(url)
   return response.data
 }

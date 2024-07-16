@@ -125,7 +125,6 @@ function RecipeDisplay() {
   }, [count])
 
   const fetchMoreData = () => {
-    
     dispatch(getReviews({recipe_id: recipe_id, index: index, count: count}))
       .then((res) => {
         // Assuming the reducer updates the state, no need to setItems here
@@ -139,6 +138,8 @@ function RecipeDisplay() {
       
     setIndex((prevIndex) => prevIndex + 1);
   };
+
+
 
   //main state handling
   const {single, isLoading, isError, message } = useSelector(
@@ -257,14 +258,12 @@ function RecipeDisplay() {
             </button>
           )
         }
-        {/* {console.log(reviews)} */}
         {reviews && reviews.length > 0 ? (
           <InfiniteScroll
           dataLength={reviews.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<Loader />}
-          threshold={2}
           >
           {/* <Suspense fallback={<div>Loading reviews...</div>}> Wrap reviews in Suspense with a fallback */}
             <div>

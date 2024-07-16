@@ -8,16 +8,19 @@ const recipemodels = require('../models/recipemodels');
 //@route GET api/recipes
 const getAllRecipes = asyncHandler(async (req, res) => {
   const { subset } = req.query
+  const offset = parseInt(req.query.offset) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+  
   var query = {}
   
   if (subset) {
     const subsetArr = subset.split(',')
     query = { _id: {$in: subsetArr}}
-    
   }
   
   //finding all
-  const recipes = await Recipe.find(query)
+  const recipes = await Recipe.find(query).skip(offset)
+  .limit(limit)
 
   res.status(200).json({
     status: "success",

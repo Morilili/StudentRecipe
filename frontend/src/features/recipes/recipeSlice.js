@@ -13,13 +13,13 @@ const initialState = {
 }
 
 export const getRecipes = createAsyncThunk('recipes/getmult',
-  async (params, thunkAPI) => {
+  async ({params, index}, thunkAPI) => {
     try {
-      if (params && params.saved_id) {
-        return await recipeService.getRecipes(params.saved_id);
+      if (params && params.length > 0) {
+        return await recipeService.getRecipes(params, index)
       } else {
-        // Fetch all recipes if no category is provided
-        return await recipeService.getRecipes();
+        // Fetch all recipes if no category is provide
+        return await recipeService.getRecipes([], index);
       }
     } catch (error) {
       const message = error.response.data.message || error.message;
@@ -101,7 +101,14 @@ export const recipeSlice = createSlice({
       .addCase(getRecipes.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.recipes = action.payload
+
+        //had some issues with the saved recipes of how it runs twice in the useeffect
+        //this ensures all the recipes in the state.recipes is unique before adding in
+        //more like a hacking solution?
+        const newRecipes = action.payload.data.filter(newRecipe => 
+          !state.recipes.some(existingRecipe => existingRecipe._id === newRecipe._id))
+        
+        state.recipes = [...state.recipes, ...newRecipes]
         state.single = []
       })
       .addCase(getRecipes.rejected, (state, action) => {

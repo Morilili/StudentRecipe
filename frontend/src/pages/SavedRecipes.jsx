@@ -2,7 +2,7 @@ import React, {useEffect, useState}from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import RecipeCard from '../components/RecipeCard'
-import { getRecipes, getSaveRecipe } from '../features/recipes/recipeSlice';
+import { getRecipes, getSaveRecipe, resetRecipe } from '../features/recipes/recipeSlice';
 import Spinner from '../components/Spinner'
 const SavedRecipes = () => {
   const { user } = useSelector((state) => state.auth)
@@ -22,10 +22,18 @@ const SavedRecipes = () => {
   }, []); 
 
   useEffect(() => {
-    if (saved_id.length != 0 ) {
-      dispatch(getRecipes({ saved_id }))
+    
+    // if (saved_id.length > 0 ) {
+    //   dispatch(getRecipes({ params: saved_id, index: 0 }))
+    // }
+    if (saved_id.length > 0 ) {
+      dispatch(getRecipes({ params: saved_id, index: 0 }))
     }
-  }, [saved_id])
+
+    return () => {
+      dispatch(resetRecipe())
+    }
+  }, [saved_id  ])
   
   if (isLoading) {
     return <Spinner/>
@@ -36,9 +44,9 @@ const SavedRecipes = () => {
       <h1>Hello {user.data.name}</h1>
       <h3>Here are your saved recipes:</h3>
       <section className='content'>
-        {recipes && recipes.data ? (
+        {recipes && recipes.length > 0 ? (
           <div className='_________'>
-            {recipes.data.map((recipe) => (
+            {recipes.map((recipe) => (
               <RecipeCard key={recipe._id} recipe={recipe} />
             ))} 
           </div>
