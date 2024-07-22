@@ -1,0 +1,117 @@
+.nav {
+  height: 60px;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 20px;
+  color: white;
+}
+
+.nav h2{
+  cursor: pointer;
+}
+
+.logo{
+  display: flex;
+  align-items: center;
+  gap: 20px
+}
+
+.nav i.bi{
+  font-size: 25px;
+  color: white;
+  cursor: pointer;
+}
+
+.nav ul{
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 0; /* Reset default margin */
+  padding: 0; /* Reset default padding */
+}
+
+.nav ul li{
+  cursor: pointer;
+}
+
+/* sidebar */
+.sidebar-container {
+    background-color: black;
+    color: white;
+    width: 290px;
+    height: calc(100vh - 60px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.sidebar-container::-webkit-scrollbar{
+  display: none;
+}
+
+.nav-option{
+  display: flex;
+  align-items: center;
+  padding: 0px 0px 0px 30px;
+  gap: 15px;
+  width: 290px; 
+  height: 60px;
+}
+
+.nav-option:hover, .nav-option:hover i.bi {
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+.nav-option i.bi{
+  color: white;
+  font-size:25px;
+}
+
+/* Content styles */
+.content {
+  flex-grow: 1; /* Allow content to take up the remaining space */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  text-align: center; /* Ensure text inside content is centered if it's not flex */
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row; /* Aligns children (sidebar and content) horizontally */
+}
+
+/* media query */
+@media screen and (min-width: 768px){
+  .navCollapse{
+    width: 80px;
+  }
+  .navCollapse .nav-option h3{
+    display: none;
+  }
+  .navCollapse .nav-option{
+    padding: 28px;
+  }
+  .smallDeviceIcon{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 767px){
+
+  .largeDeviceIcon{
+    display: none;
+  }
+  .sidebar-container{
+    display: none;
+  }
+  .smallNav{
+    display: block;
+  }
+  .logo h2{
+    display: none;
+  }
+}
