@@ -2,7 +2,6 @@ import React from 'react'
 import { createTheme, MantineProvider } from '@mantine/core';
 import { Title, Text, Button, Container, Group } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-// import '@mantine/core/styles.css';
 import classes from './css/NotFoundTitle.module.css';
 
 export function NotFound() {

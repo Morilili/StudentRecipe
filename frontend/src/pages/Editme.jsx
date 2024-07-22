@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { deleteaccount, editme , reset } from '../features/auth/authSlice'
 import {useSelector, useDispatch} from 'react-redux'
 import { toast} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
 
 function Editme() {
   const [formData, setFormData] = useState({

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import RecipeCard from '../components/RecipeCard'
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ToastContainer, toast} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
 import { getRecipes, resetRecipe} from '../features/recipes/recipeSlice';
 import Spinner from '../components/Spinner'
 import Loader from '../components/Loader'
