@@ -265,13 +265,11 @@ function RecipeDisplay() {
           hasMore={hasMore}
           loader={<Loader />}
           >
-          {/* <Suspense fallback={<div>Loading reviews...</div>}> Wrap reviews in Suspense with a fallback */}
             <div>
               {reviews && reviews.map((review) => (
                 <ReviewCard key={review.id} user={user} review={review} recipe_id={recipe_id} openModal={openModal} closeModal={closeModal} activeModalId={activeModalId}/>
               ))}
             </div>
-          {/* </Suspense> */}
           </InfiniteScroll>
           ) : (
             <h5> No reviews have been left for this recipe</h5>

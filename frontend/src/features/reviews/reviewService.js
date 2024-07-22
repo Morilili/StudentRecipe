@@ -4,8 +4,10 @@ const API_URL = '/api/reviews/'
 
 const getReviews = async(recipe_id, index, count) => {
   const offset = (count - ((index + 1) * 6)) > 0 ? (count - ((index + 1) * 6)) : 0
-  const limit = -(count - ((index + 1) * 6))
+  const limit = 6 + (count - ((index + 1) * 6))
 
+  console.log(index)
+  console.log(offset, limit)
   //almost hacking the solution here
   var response
   if (count<6){
