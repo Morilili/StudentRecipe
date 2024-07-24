@@ -60,6 +60,16 @@ export const adminLogin = createAsyncThunk('auth/adminlogin',
     }
 })
 
+export const adminVerify = createAsyncThunk("auth/adminVerify",
+  async(token,thunkAPI) => {
+    try{
+      return await authService.adminVerify(token)
+    } catch (error) { 
+      const message = error.response.data.message || error.message
+      return thunkAPI.rejectWithValue(message)
+    }
+})
+
 
 export const logout = createAsyncThunk('auth/logout',
   async(_, thunkAPI) => {
@@ -154,6 +164,21 @@ export const authSlice = createSlice({
       })
       .addCase(adminLogin.rejected, (state, action) => {
         toast.error(action.payload)
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+        state.user = null
+      })
+      .addCase(adminVerify.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(adminVerify.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isAuthorized = false
+        state.isAdmin = true
+        // state.user = action.payload
+      })
+      .addCase(adminVerify.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

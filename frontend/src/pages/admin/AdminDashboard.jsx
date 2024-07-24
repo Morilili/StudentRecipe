@@ -3,8 +3,9 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import './css/MainPage.css'
 import { Navigate, useNavigate } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux'
-import { reset } from '../../features/auth/authSlice'
+import { adminVerify, reset } from '../../features/auth/authSlice'
 import withAdminAuth from '../../helper/withAdminAuth';
+import Spinner from '../../components/Spinner'
 
 function AdminDashboard() {
   const navigate = useNavigate()
@@ -48,13 +49,30 @@ function AdminDashboard() {
   )
 
   useEffect(() => {
-    if (!user || user.data.role !== "Admin") {
-      
+    if (!user) {
       navigate('/admin/login')
     }
+
+    (async () => {
+      if (user && user.data.token) {
+        const isAdmin = await dispatch(adminVerify(user.data.token));
+        if (!isAdmin.payload.data) {
+          localStorage.removeItem('user')
+          navigate('/notfound');
+          window.location.reload()
+        }
+      }
+      // } else {
+      //   // navigate('/admin/login');
+      // }
+    })();
     
     // dispatch(reset())
   },[user, isAuthorized, isAdmin, isError, message, navigate, dispatch])
+
+  if (isLoading || !isAdmin){
+    return <Spinner />
+  }
 
   return (
     <>
@@ -67,7 +85,7 @@ function AdminDashboard() {
                   <i className='bi bi-justify smallDeviceIcon' onClick={e => setSmallNavCollapse(!smallNavCollapse)}></i>
               </div>
               <ul>
-                  <li>NAME</li>
+                  <li>Admin: {user.data.name}</li>
               </ul>
           </nav>
           <div className='flex-container'>

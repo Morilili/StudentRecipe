@@ -33,6 +33,17 @@ const adminLogin = async(userData) =>{
   return response.data
 }
 
+//verify if logged in user if admin
+const adminVerify = async(token) => { 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`, 
+    },
+  }
+  const response = await axios.get(API_URL + 'adminVerify', config)
+  return response.data
+}
+
 const logout = async() => {
   const response = await axios.post(API_URL + 'logout')
   
@@ -72,6 +83,7 @@ const authService = {
   logout,
   login,
   adminLogin,
+  adminVerify,
   editme,
   deleteaccount
 }

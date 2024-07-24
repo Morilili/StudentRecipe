@@ -95,6 +95,44 @@ const loginUser = asyncHandler ( async (req, res, next) => {
   }
 })
 
+//@desc Ensuring the user within admin dashboard is an admin
+//@route GET api/users/adminVerify
+const adminVerify = asyncHandler(async (req, res, next) => {
+  try {
+    // Extract token from header
+    // console.log(req.user)
+    
+    const token = req.headers.authorization.split(' ')[1]; // Assuming Bearer token
+  
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    
+    // Fetch user from database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if user is an admin
+    if (user.role === 'Admin') {
+      res.status(200).json({
+        status: "success",
+        data: true,
+        message: 'Admin verification Successful'
+      })
+    } else {
+      return res.status(403).json({ message: "Not authorized as an admin" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 //@desc Authenticate a user
 //@route POST api/users/logout
 const logoutUser = asyncHandler( async(req,res) => {
@@ -181,6 +219,7 @@ module.exports = {
   registerUser, 
   loginUser,
   getMe,
+  adminVerify,
   editUser,
   deleteUser,
   logoutUser
