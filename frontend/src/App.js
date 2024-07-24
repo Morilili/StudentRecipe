@@ -7,9 +7,11 @@ import RecipeDisplay from './pages/RecipeDisplay'
 import Editme from './pages/Editme'
 import SavedRecipes from './pages/SavedRecipes'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminLogin from './pages/admin/pages/AdminLogin'
 import NotFound from './pages/NotFound'
 import { ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import withAdminAuth from './helper/withAdminAuth'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import '@mantine/core/styles.css';
 
@@ -36,7 +38,9 @@ function App() {
           <div>
             <Routes>
               <Route path='/admin' element={<AdminDashboard/>} />
+              <Route path='/admin/login' element={<AdminLogin/>} />
             </Routes>
+            <ToastContainer autoClose={1500} />
           </div>
         )}
       </Router>
@@ -44,4 +48,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAdminAuth(App);
