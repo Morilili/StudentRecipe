@@ -62,12 +62,8 @@ function AdminDashboard() {
           window.location.reload()
         }
       }
-      // } else {
-      //   // navigate('/admin/login');
-      // }
     })();
     
-    // dispatch(reset())
   },[user, isAuthorized, isAdmin, isError, message, navigate, dispatch])
 
   if (isLoading || !isAdmin){
