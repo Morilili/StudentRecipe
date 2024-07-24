@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "bootstrap-icons/font/bootstrap-icons.css"
 import './css/MainPage.css'
-
+import { Navigate, useNavigate } from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux'
+import { reset } from '../../features/auth/authSlice'
+import withAdminAuth from '../../helper/withAdminAuth';
 
 function AdminDashboard() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const [navCollapse, setNavCollapse] = useState(false);
   const [smallNavCollapse, setSmallNavCollapse] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Dashboard');
@@ -36,8 +42,24 @@ function AdminDashboard() {
       }
   };
 
+  //authorisation
+  const {user, isAuthorized, isAdmin, isLoading, isError, message} = useSelector(
+    (state) => state.auth
+  )
+
+  useEffect(() => {
+    if (!user || user.data.role !== "Admin") {
+      
+      navigate('/admin/login')
+    }
+    
+    // dispatch(reset())
+  },[user, isAuthorized, isAdmin, isError, message, navigate, dispatch])
+
   return (
-      <div>
+    <>
+      {user && user.data.role ==='Admin' ? (
+        <div>
           <nav className='nav'>
               <div className='logo'>
                   <h2> Student Recipe Admin Dashboard</h2>
@@ -62,10 +84,13 @@ function AdminDashboard() {
             <div className="content">
               {renderContent()}
             </div>   
-          </div>
-          
-          
+          </div>  
       </div>
+      ) : (
+        <></>
+      )                
+    }
+    </>
   );
 }
 

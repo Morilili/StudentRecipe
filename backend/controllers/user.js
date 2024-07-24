@@ -65,16 +65,30 @@ const loginUser = asyncHandler ( async (req, res, next) => {
   const user = await User.findOne({email})
 
   if (user && (await bcrypt.compare(password, user.password))){
-    res.status(200).json({
-      status: "success",
-      data: {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        token: generateToken(user._id)
-      },
-      message: "Login Success",
-    })
+    // quite ugly for nested if loops but too lazy to change currently
+    if(user.role === 'Admin'){
+      res.status(200).json({
+        status: "success",
+        data: {
+          _id: user.id,
+          name: user.name,
+          role: "Admin",
+          token: generateToken(user._id)
+        },
+        message: "Admin Login Success",
+      })
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: {
+          _id: user.id,
+          name: user.name,
+          email: user.email,
+          token: generateToken(user._id)
+        },
+        message: "Login Success",
+      })
+    }
   } else {
     res.status(400).json({message: "Invalid credential"})
     next(new Error("Invalid Credentials"))
