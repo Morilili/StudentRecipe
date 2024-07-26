@@ -54,7 +54,10 @@ function Recipe(){
     }
   }, [])
 
-  
+  if (recipes.length == 0){
+    return <Spinner/>
+  }
+
   return (
     <InfiniteScroll
       dataLength={recipes.length}

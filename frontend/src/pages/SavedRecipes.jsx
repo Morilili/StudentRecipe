@@ -4,15 +4,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import RecipeCard from '../components/RecipeCard'
 import { getRecipes, getSaveRecipe, resetRecipe } from '../features/recipes/recipeSlice';
 import InfiniteScroll from "react-infinite-scroll-component";
-import Spinner from '../components/Spinner'
+import NotFound from './NotFound';
 import Loader from '../components/Loader'
+import Spinner from '../components/Spinner';
 
 const SavedRecipes = () => {
   const { user } = useSelector((state) => state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const saved_id = useSelector((state) => state.recipes.usersaved)
-  const {recipes, isLoading, isError, message } = useSelector(
+  const {recipes, isSuccess, isLoading, isError, message } = useSelector(
     (state) => state.recipes
   )
   
@@ -30,9 +31,6 @@ const SavedRecipes = () => {
   const [index, setIndex] = useState(1);
 
   const fetchMoreData = () => {
-    // dispatch(resetRecipe())
-    // dispatch(getRecipes({index: index}))
-    // setHasMore(true)
     dispatch(getRecipes({index: index}))
       .then((res) => {
         res.payload.data.length > 0 ? setHasMore(true) : setHasMore(false);
@@ -49,6 +47,8 @@ const SavedRecipes = () => {
       dispatch(getRecipes({ params: saved_id, index: 0 }))
     } else if (saved_id.length > 0){
       dispatch(getRecipes({ params: saved_id, index: 0 }))
+    } else {
+      setHasMore(false)
     }
 
     return () => {
@@ -56,10 +56,15 @@ const SavedRecipes = () => {
     }
   }, [saved_id])
   
+  if (isLoading || saved_id.length !== 0) {
+   return <Spinner/> 
+  }
   
 
   return (
-    <InfiniteScroll
+    <>
+    {user ? (
+      <InfiniteScroll
       dataLength={recipes.length}
       next={fetchMoreData}
       hasMore={hasMore}
@@ -69,12 +74,11 @@ const SavedRecipes = () => {
         <p style={{ textAlign: 'center' }}>
           <b>This is the end. Go save more tasty recipes :p</b>
         </p>
-      }
-    >
+      }>
     <div>
       <h1>Hello {user.data.name}</h1>
       <h3>Here are your saved recipes:</h3>
-      <section className='content'>
+      <section >
         {recipes && recipes.length > 0 ? (
           <div className='_________'>
             {recipes.map((recipe) => (
@@ -88,6 +92,11 @@ const SavedRecipes = () => {
       </section>
     </div>
     </InfiniteScroll>
+    ) :
+    (
+      navigate('/notfound')
+    )}
+    </>
   );
 };
 

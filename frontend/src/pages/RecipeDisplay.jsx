@@ -39,6 +39,10 @@ function RecipeDisplay() {
     dispatch(getLikeStatus({recipe_id: recipe_id}))
   }, [likeStatus])
 
+
+  //@TODO the ui does not reflect if when loaded in the page
+  // and user tries to update the action twice. because the "likes"
+  // is a const and not updated 
   const handleLike = () => { 
     if (likes === 'disliked') {
       return
