@@ -8,13 +8,10 @@ const adminprotect = asyncHandler(async(req, res, next) =>{
     try{
       //get token from header
       token = req.headers.authorization.split(' ')[1]
-      
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
 
       //get user from the token
       req.user = await User.findById(decoded.id).select('-password')
-
       //ensure it is admin
       if (req.user.role == "Admin") next();
       else throw new Error()

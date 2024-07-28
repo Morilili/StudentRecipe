@@ -12,7 +12,7 @@ const withAdminAuth = (Component) => {
     if (user && user.data.role === "Admin" && !pathname.startsWith('/admin')) {
       // Redirect to admin login page or another appropriate page
       
-      return window.location.href = '/admin/login'
+      return window.location.href = '/admin'
     }
 
     // // If user is admin and path starts with '/admin', render the component

@@ -3,8 +3,9 @@ import "bootstrap-icons/font/bootstrap-icons.css"
 import './css/MainPage.css'
 import { Navigate, useNavigate } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux'
-import { adminVerify, reset } from '../../features/auth/authSlice'
-import withAdminAuth from '../../helper/withAdminAuth';
+import { adminVerify, logout, reset } from '../../features/auth/authSlice'
+import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
 import Spinner from '../../components/Spinner'
 
 function AdminDashboard() {
@@ -15,11 +16,18 @@ function AdminDashboard() {
   const [smallNavCollapse, setSmallNavCollapse] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Dashboard');
 
+  //logout function
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate('/admin/login')
+  }
+  
   const navOptions = [
       { id: 'Dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
-      { id: 'Users', icon: 'bi-clipboard-pulse', label: 'Users' },
-      { id: 'Recipes', icon: 'bi-chat-square-text', label: 'Recipes' },
-      { id: 'Reviews', icon: 'bi-gear', label: 'Reviews' },
+      { id: 'Users', icon: 'bi-people', label: 'Users' },
+      { id: 'Recipes', icon: 'bi-file-text-fill', label: 'Recipes' },
+      { id: 'Reviews', icon: 'bi-chat-left-dots', label: 'Reviews' },
       { id: 'Settings', icon: 'bi-gear', label: 'Settings' },
       { id: 'Logout', icon: 'bi-power', label: 'Logout' },
   ];
@@ -27,9 +35,9 @@ function AdminDashboard() {
   const renderContent = () => {
       switch (selectedOption) {
           case 'Dashboard':
-              return <div>Dashboard Conte</div>;
+              return <Dashboard />;
           case 'Users':
-              return <div>Analytics Content</div>;
+              return <Users />;
           case 'Recipes':
               return <div>Messages Content</div>;
           case 'Reviews':
@@ -37,7 +45,7 @@ function AdminDashboard() {
           case 'Settings':
               return <div>Settings Content</div>;
           case 'Logout':
-              return <div>Logout Content</div>;
+              return <button className='btn btn-primary btn-lg' onClick={onLogout}> Logout </button>
           default:
               return <div>Select an option</div>;
       }

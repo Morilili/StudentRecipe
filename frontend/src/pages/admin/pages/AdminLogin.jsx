@@ -88,6 +88,7 @@ function AdminLogin() {
             <button type='submit' className='.btn btn-block'>
               Submit
             </button>
+            <button onClick={() => {navigate('/') ; window.location.reload()}}> Go back to home page</button>
           </div>
         </form>
       </section>
