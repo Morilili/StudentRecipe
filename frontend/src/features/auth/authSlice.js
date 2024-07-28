@@ -7,12 +7,26 @@ const user = JSON.parse(localStorage.getItem('user'))
 
 const initialState = {
   user: user ? user: null,
+  Admins: [],
+  Users: [],
   isError: false,
   isAuthorized: false,
   isAdmin: false,
   isLoading: false,
   message: ''
 };
+
+export const getUsers = createAsyncThunk('auth/getUsers',
+  async(role, thunkAPI) => {
+    try{
+      const token = thunkAPI.getState.apply().auth.user.data.token
+      return await authService.getUsers(role, token)
+    } catch (error) {
+      const message = error.response.data.message || error.message
+      return thunkAPI.rejectWithValue(message)
+    }
+  } 
+)
 
 // Registering User
 export const register = createAsyncThunk('auth/register', 
@@ -107,6 +121,18 @@ export const deleteaccount = createAsyncThunk('auth/deleteaccount',
   }
 )
 
+export const admindeleteaccount = createAsyncThunk('auth/admindeleteaccount',
+  async(user_id, thunkAPI) => {
+    try{
+      const token = thunkAPI.getState.apply().auth.user.data.token
+      return await authService.admindeleteaccount(user_id, token)
+      } catch (error) {
+        const message = error.response.data.message || error.message
+        return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -122,6 +148,22 @@ export const authSlice = createSlice({
   // make changes as need in the future
   extraReducers: (builder) => {
     builder
+      .addCase(getUsers.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getUsers.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isAuthorized = true
+        if (action.payload.data[0].role == "Admin") state.Admins = action.payload.data
+        if (action.payload.data[0].role == "User") state.Users = action.payload.data
+      })
+      .addCase(getUsers.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+        state.Users = null
+        state.Admins = null
+      })
       .addCase(register.pending, (state) => {
         state.isLoading = true
       })
@@ -221,6 +263,18 @@ export const authSlice = createSlice({
         state.isLoading  = false
       }) 
       .addCase(deleteaccount.rejected, (state, action) => {
+        state.isError = true
+        state.isLoading = false
+        state.message = action.payload
+      })
+      .addCase(admindeleteaccount.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(admindeleteaccount.fulfilled, (state, action) => {
+        toast.success(action.payload.message)
+        state.isLoading  = false
+      }) 
+      .addCase(admindeleteaccount.rejected, (state, action) => {
         state.isError = true
         state.isLoading = false
         state.message = action.payload

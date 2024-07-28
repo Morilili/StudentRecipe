@@ -11,6 +11,25 @@ const generateToken = (id) => {
 }
 // look more into access
 
+//@desc Get Users
+//@route GET api/users
+const getUsers = asyncHandler(async(req,res,next) => {
+  const role = req.query;
+
+  const users = await User.find(role);
+
+  if (!users){
+    return res.status(401).json({ message: "No Users found" });
+  } else {
+    res.status(201).json({
+      status: "success",
+      data: users,
+      count: users.length,
+      message: "Users retrieved successfully"
+    })
+  }
+})
+
 //@desc Register new user
 //@route POST api/users
 const registerUser = asyncHandler(async(req, res, next) => {
@@ -216,6 +235,7 @@ const getMe = asyncHandler(async (req, res) => {
 
 
 module.exports = {
+  getUsers,
   registerUser, 
   loginUser,
   getMe,

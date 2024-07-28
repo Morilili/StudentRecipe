@@ -2,6 +2,21 @@ import axios from 'axios'
 
 const API_URL = '/api/users/'
 
+//Get users
+const getUsers = async(role, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      role: role // This will be added as a query parameter to the URL
+    },
+  }
+
+  const response = await axios.get(API_URL, config)
+  return response.data
+}
+
 //register user
 const register = async(userData) =>{
   const response = await axios.post(API_URL, userData)
@@ -78,14 +93,26 @@ const deleteaccount = async(user_id, token) => {
   return response.data
 }
 
+const admindeleteaccount = async(user_id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await axios.delete(API_URL + user_id, config)
+  return response.data
+}
+
 const authService = {
+  getUsers,
   register,
   logout,
   login,
   adminLogin,
   adminVerify,
   editme,
-  deleteaccount
+  deleteaccount,
+  admindeleteaccount
 }
 
 export default authService

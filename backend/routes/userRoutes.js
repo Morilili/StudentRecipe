@@ -2,11 +2,12 @@ const express = require('express')
 const userRouter = express.Router();
 
 // Load middleware
-const { userprotect } = require("../middleware/auth")
+const { userprotect, adminprotect } = require("../middleware/auth")
 const { removeUser } = require('../middleware/remove')
 // Load controllers
-const { registerUser, loginUser, editUser, logoutUser, deleteUser, getMe, adminVerify} = require('../controllers/user')
+const { getUsers, registerUser, loginUser, editUser, logoutUser, deleteUser, getMe, adminVerify} = require('../controllers/user')
 
+userRouter.get('/', adminprotect, getUsers)
 userRouter.post('/', registerUser);
 userRouter.post('/login', loginUser);
 userRouter.post('/logout', logoutUser);
