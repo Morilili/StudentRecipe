@@ -50,6 +50,17 @@ const getSaveRecipe = async(recipe_id ,token) => {
   return response.data
 }
 
+const createRecipe = async(recipedata, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  
+  const response = await axios.post(API_URL, recipedata, config)
+  return response.data
+}
+
 const saveRecipe = async(recipe_id, token) => {
   const config = {
     headers: {
@@ -61,13 +72,25 @@ const saveRecipe = async(recipe_id, token) => {
   return response.data
 }
 
+const deleteRecipe = async(recipe_id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await axios.delete(API_URL + recipe_id, config)
+  return response.data
+}
+
 const recipeService = {
   getRecipes,
   getSingleRecipe,
   getLikeStatus,
   updateLikeStatus,
   getSaveRecipe,
-  saveRecipe
+  saveRecipe,
+  createRecipe, 
+  deleteRecipe
 }
 
 export default recipeService  

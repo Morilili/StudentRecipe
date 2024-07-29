@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import recipeService from "./recipeService"
-
+import { toast } from 'react-toastify'
 const initialState = {
   recipes: [],
   single: [], 
@@ -75,11 +75,36 @@ export const getSaveRecipe = createAsyncThunk('recipes/getSave',
   }
 )
 
+export const createRecipe = createAsyncThunk('recipes/create',
+  async(recipedata, thunkAPI) => {
+    try{
+      const token = thunkAPI.getState.apply().auth.user.data.token
+      return await recipeService.createRecipe(recipedata, token)
+    } catch (error) {
+      const message = error.response.data.message || error.message
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const saveRecipe = createAsyncThunk('recipes/save',
   async(recipe_id, thunkAPI) => {
     try{
       const token = thunkAPI.getState.apply().auth.user.data.token
       return await recipeService.saveRecipe(recipe_id, token)
+    } catch (error) {
+      const message = error.response.data.message || error.message
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const deleteRecipe = createAsyncThunk('recipes/delete',
+  async(recipe_id, thunkAPI) => {
+    try{
+      
+      const token = thunkAPI.getState.apply().auth.user.data.token
+      return await recipeService.deleteRecipe(recipe_id, token)
     } catch (error) {
       const message = error.response.data.message || error.message
       return thunkAPI.rejectWithValue(message)
@@ -165,6 +190,21 @@ export const recipeSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
+      .addCase(createRecipe.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(createRecipe.fulfilled, (state, action) => {
+        toast.success(action.payload.message)
+        state.isLoading = false
+        state.isSuccess = true
+        // state.usersaved = action.payload.data
+        console.log(action.payload)
+      })
+      .addCase(createRecipe.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
       .addCase(saveRecipe.pending, (state) => {
         state.isLoading = true
       })
@@ -187,6 +227,18 @@ export const recipeSlice = createSlice({
         state.usersaved = action.payload.data
       })
       .addCase(getSaveRecipe.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(deleteRecipe.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteRecipe.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+      })
+      .addCase(deleteRecipe.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

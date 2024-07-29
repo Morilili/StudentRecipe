@@ -6,7 +6,7 @@ const recipeSchema = mongoose.Schema({
     require: true 
   },
   images: [],
-  ingrediants: [],
+  ingredients: [],
   directions: [],
   dateCreated: {
     type: Date,

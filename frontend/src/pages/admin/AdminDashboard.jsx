@@ -6,6 +6,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import { adminVerify, logout, reset } from '../../features/auth/authSlice'
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import Recipe from './pages/Recipes';
 import Spinner from '../../components/Spinner'
 
 function AdminDashboard() {
@@ -26,8 +27,7 @@ function AdminDashboard() {
   const navOptions = [
       { id: 'Dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
       { id: 'Users', icon: 'bi-people', label: 'Users' },
-      { id: 'Recipes', icon: 'bi-file-text-fill', label: 'Recipes' },
-      { id: 'Reviews', icon: 'bi-chat-left-dots', label: 'Reviews' },
+      { id: 'Recipes', icon: 'bi-file-text', label: 'Recipes' },
       { id: 'Settings', icon: 'bi-gear', label: 'Settings' },
       { id: 'Logout', icon: 'bi-power', label: 'Logout' },
   ];
@@ -39,7 +39,7 @@ function AdminDashboard() {
           case 'Users':
               return <Users />;
           case 'Recipes':
-              return <div>Messages Content</div>;
+              return <Recipe />;
           case 'Reviews':
               return <div>review</div>
           case 'Settings':
