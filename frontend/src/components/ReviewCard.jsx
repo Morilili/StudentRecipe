@@ -8,7 +8,6 @@ function ReviewCard( {user, review, openModal, closeModal, activeModalId} ) {
   const dispatch = useDispatch()
 
   const deleteReview = (e) =>{
-    console.log(review._id)
     dispatch(delrev(review._id))
     closeModal();
     window.location.reload()

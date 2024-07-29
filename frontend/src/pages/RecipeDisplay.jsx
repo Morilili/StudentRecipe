@@ -214,8 +214,8 @@ function RecipeDisplay() {
       <div>
         <h3>Ingredients</h3>
         <ul>
-          {recipe && recipe.ingrediants.map((ingrediant, index) => (
-            <li key={index}>{ingrediant}</li>
+          {recipe && recipe.ingredients.map((ingredient, index) => (
+            <li key={index}>{ingredient}</li>
           ))}
         </ul>
         <h3>Directions</h3>

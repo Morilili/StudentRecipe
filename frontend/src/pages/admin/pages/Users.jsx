@@ -16,13 +16,13 @@ function Users() {
   
 
   return (
-    <div>
-      <h1>Admins:</h1>
+    <div class='overflow-auto' style={{ overflow: 'auto', maxHeight: '90vh', width: '100%', maxWidth: '100%' }}>
+      <h1 style={{ textAlign: 'left' , padding: '10px'}}>Admins:</h1>
       {/* Render Admins */}
       {Admins && Admins.map((admin, index) => (
-        <UserCard key={index} user={admin}></UserCard>
+        <UserCard key={index} user={admin} ></UserCard>
       ))}
-      <h1>Users:</h1>
+      <h1 style={{ textAlign: 'left' , padding: '10px'}}>Users:</h1>
       {/* Render Users */}
       {Users && Users.map((user, index) => (
         <UserCard key={index} user={user}></UserCard>
