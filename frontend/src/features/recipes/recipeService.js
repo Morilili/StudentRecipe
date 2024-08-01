@@ -72,7 +72,18 @@ const saveRecipe = async(recipe_id, token) => {
   return response.data
 }
 
-const deleteRecipe = async(recipe_id, token) => {
+const updateRecipe = async(recipe_id, recipedata, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.put(API_URL + recipe_id, recipedata, config)
+  return response.data
+}
+
+const deleteRecipe = async(recipe_id,token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -89,7 +100,8 @@ const recipeService = {
   updateLikeStatus,
   getSaveRecipe,
   saveRecipe,
-  createRecipe, 
+  createRecipe,
+  updateRecipe, 
   deleteRecipe
 }
 

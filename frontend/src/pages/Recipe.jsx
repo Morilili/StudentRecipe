@@ -21,17 +21,20 @@ function Recipe(){
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
   
-  // useEffect(() => {
-    
-  //   // return () => {
-  //   //   // dispatch(resetRecipe())
-  //   // }
-  // }, [])
+  const get = async () => {
+    try {
+      const response = await dispatch(getRecipes({index: 0}));
+      const newRecipes = response.payload.data;
+
+      if (newRecipes.length < 10) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  };
 
   const fetchMoreData = () => {
-    // dispatch(resetRecipe())
-    // dispatch(getRecipes({index: index}))
-    // setHasMore(true)
     dispatch(getRecipes({index: index}))
       .then((res) => {
         res.payload.data.length > 0 ? setHasMore(true) : setHasMore(false);
@@ -46,11 +49,9 @@ function Recipe(){
       console.log(message)
     }
     
-    dispatch(getRecipes({index: 0}))
+    get()
 
     return () => {
-      // dispatch(getRecipes({index: index}))
-      // dispatch(resetRecipe())
     }
   }, [])
 

@@ -3,9 +3,14 @@ import { useNavigate, useRevalidator } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
 import { getRecipes,deleteRecipe, resetRecipe } from '../../../features/recipes/recipeSlice';
 
-function RecipeCard({ recipe }) {
+function RecipeCard({ recipe, onEditRecipe, onEditClick  }) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
+
+  const handleEditClick = () => {
+    onEditRecipe(recipe._id);
+    onEditClick('edit')
+  };
 
   const onDeleteRecipe = async() => { 
     const reponse = await dispatch(deleteRecipe(recipe._id))
@@ -22,7 +27,7 @@ function RecipeCard({ recipe }) {
           />
           <h3>{recipe.name}</h3>
           <div>
-            <button className='btn btn-secondary'>Edit</button>
+            <button className='btn btn-secondary' onClick={handleEditClick}>Edit</button>
             <button className='btn btn-primary' onClick={onDeleteRecipe}>Delete</button>
           </div>
       </div>

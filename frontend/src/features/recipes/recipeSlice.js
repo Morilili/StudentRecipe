@@ -51,7 +51,7 @@ export const getLikeStatus = createAsyncThunk('recipes/getlikestatus',
   }
 )
 
-export const updateLikeStatus = createAsyncThunk('recipes/update',
+export const updateLikeStatus = createAsyncThunk('recipes/updatelikes',
   async( {recipe_id, action}, thunkAPI) => {
     try {
       const token = thunkAPI.getState.apply().auth.user.data.token
@@ -99,6 +99,18 @@ export const saveRecipe = createAsyncThunk('recipes/save',
   }
 )
 
+export const updateRecipe = createAsyncThunk('recipes/update',
+  async({recipe_id, recipedata}, thunkAPI) => {
+    try{
+      const token = thunkAPI.getState.apply().auth.user.data.token
+      return await recipeService.updateRecipe(recipe_id, recipedata, token)
+    } catch (error) {
+      const message = error.response.data.message || error.message
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 export const deleteRecipe = createAsyncThunk('recipes/delete',
   async(recipe_id, thunkAPI) => {
     try{
@@ -126,7 +138,6 @@ export const recipeSlice = createSlice({
       .addCase(getRecipes.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-
         //had some issues with the saved recipes of how it runs twice in the useeffect
         //this ensures all the recipes in the state.recipes is unique before adding in
         //more like a hacking solution?
@@ -197,8 +208,6 @@ export const recipeSlice = createSlice({
         toast.success(action.payload.message)
         state.isLoading = false
         state.isSuccess = true
-        // state.usersaved = action.payload.data
-        console.log(action.payload)
       })
       .addCase(createRecipe.rejected, (state, action) => {
         state.isLoading = false
@@ -227,6 +236,19 @@ export const recipeSlice = createSlice({
         state.usersaved = action.payload.data
       })
       .addCase(getSaveRecipe.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(updateRecipe.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updateRecipe.fulfilled, (state, action) => {
+        toast.success(action.payload.message)
+        state.isLoading = false
+        state.isSuccess = true
+      })
+      .addCase(updateRecipe.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload

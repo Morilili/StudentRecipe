@@ -53,7 +53,6 @@ const createNewRecipe = asyncHandler(async (req, res) => {
   const { name, ingredients, directions } = req.body
   const recipe_pics = [];
   if (req.files) req.files.forEach((pic) => {recipe_pics.push(pic.filename)})
-  
 
   if (!name || !ingredients || !directions){
     res.status(400).json({message: "Please provide all details"})
@@ -77,22 +76,20 @@ const createNewRecipe = asyncHandler(async (req, res) => {
 //@desc Updating a single recipe detail
 //@route PUT api/recipes/:recipe_id
 const updateRecipe = asyncHandler(async (req, res) => {
-  const { name, ingrediants, directions } = req.body
+  const { name, ingredients, directions } = req.body
   const new_images = []
-
   if (req.files) req.files.forEach((pic) => {new_images.push(pic.filename)})
-  
+
   const recipe = await Recipe.findById(req.params.recipe_id)
 
   if (!recipe){
     res.status(404).json({message: "Recipe not found"})
     next(new Error("Recipe not found"))
   }
-
   if (name) recipe.name = name;
-  if (ingredients) recipe.ingrediants = ingredients;
+  if (ingredients) recipe.ingredients = ingredients;
   if (directions) recipe.directions = directions;
-  if (new_images.length > 0) recipe.images = recipe.images.concat(new_images);
+  if (new_images) recipe.images = [...recipe.images, ...new_images];
 
   await recipe.save(); 
 

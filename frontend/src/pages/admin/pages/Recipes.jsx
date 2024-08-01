@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 // import RecipeCard from '../components/RecipeCard'
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getRecipes, createRecipe, resetRecipe } from '../../../features/recipes/recipeSlice';
+import EditRecipe from '../components/EditRecipe';
 import RecipeCard from '../components/RecipeCard';
 import Spinner from '../../../components/Spinner';
 import Loader from '../../../components/Loader';
 
 function Recipe(){
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   
-  const {recipes, isLoading, isError, message } = useSelector(
+  const {recipes, single, isLoading, isError, message } = useSelector(
     (state) => state.recipes
   )
 
   // For rendering the contents
   const [content, setContent] = useState('display');
 
-
+  // For the edit portion of the recipes
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null);
+  const handleEditRecipe = (recipeId) => {
+    setSelectedRecipeId(recipeId);
+  };
 
   // Dynamically adds new fields for ingredients and directions as user fills in the alst available field
   const [ingredients, setIngredients] = useState(['']);
@@ -41,15 +44,14 @@ function Recipe(){
     newDirections[index] = value;
     setDirections(newDirections);
 
-    // Automatically add a new field if the user is editing the last direction field
     if (index === directions.length - 1) {
       setDirections([...newDirections, '']);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit logic here
+    
     const recipeName = document.getElementById('recipeName').value;
     const formData = new FormData();
     formData.append('name', recipeName);
@@ -62,8 +64,9 @@ function Recipe(){
     directions.filter(direction => direction.trim() !== '').forEach((direction, index) => {
       formData.append(`directions[${index}]`, direction);
     });
-    // Dispatch createRecipe action with the recipeData
-    dispatch(createRecipe(formData));
+
+    const response = await dispatch(createRecipe(formData));
+    if (response.payload.status === 'success') window.location.reload()
   };
 
 
@@ -78,11 +81,24 @@ function Recipe(){
   };
 
 
+
   // inifinite scrolling
   // const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
   
+  const get = async () => {
+    try {
+      const response = await dispatch(getRecipes({index: 0}));
+      const newRecipes = response.payload.data;
+
+      if (newRecipes.length < 10) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  };
 
   const fetchMoreData = () => {
     dispatch(getRecipes({index: index}))
@@ -94,19 +110,22 @@ function Recipe(){
     setIndex((prevIndex) => prevIndex + 1);
   };
 
+
+
   useEffect(() => {
     if (isError) {
       console.log(message)
     }
     
-    dispatch(getRecipes({index: 0}))
-    
+    get()
+
     return () => {
       dispatch(resetRecipe())
     }
   }, [])
 
-  if (recipes.length == 0){
+
+  if (recipes.length == 0 && single.length == 0){
     return <Spinner/>
   }
 
@@ -136,7 +155,7 @@ function Recipe(){
                   {recipes.length > 0 ? (
                     <div className='recipe-list'>
                       {recipes.map((recipe) => (
-                        <RecipeCard key={recipe._id} recipe={recipe}/>
+                        <RecipeCard key={recipe._id} recipe={recipe} onEditRecipe={handleEditRecipe} onEditClick={setContent}/>
                       ))} 
                     </div>
                   ) : (
@@ -196,8 +215,7 @@ function Recipe(){
       case 'edit':
         return (
           <div>
-            {/* Your edit recipe component or JSX here */}
-            <p>Edit Recipe Form</p>
+            {selectedRecipeId && <EditRecipe recipeId={selectedRecipeId} setContent={setContent} />}
           </div>
         );
       default:
