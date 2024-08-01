@@ -39,6 +39,7 @@ function App() {
             <Routes>
               <Route path='/admin' element={<AdminDashboard/>} />
               <Route path='/admin/login' element={<AdminLogin/>} />
+              <Route path='/admin/*' element={<NotFound/>} />
             </Routes>
             <ToastContainer autoClose={1500} />
           </div>

@@ -21,17 +21,9 @@ function Editme() {
   
   
   useEffect(() =>{
-    // if (isError){
-    //   toast.error(message)
-    // }
 
     if (!user) navigate('/')
-    
-    
-    // if (!isAuthorized || !user){
-    //   navigate('/')
-    // }
-    
+
     dispatch(reset())
   }, [user, isAuthorized, isError, message, navigate, dispatch]);
 
@@ -49,11 +41,8 @@ function Editme() {
       name,
       password,
     }
-
     const edit = await dispatch(editme({user_id: user.data._id ,userdata: userData}))
     if (!edit.error) navigate('/')
-      
-    
   }
 
   return (
