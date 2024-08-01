@@ -6,6 +6,22 @@ const fs = require('fs');
 const path = require('path');
 const recipemodels = require('../models/recipemodels');
 
+//@desc Get the number of recipes
+//@route GET api/recipes/count
+const getCount = asyncHandler(async(req,res) => {
+  try {
+    const count = await Recipe.countDocuments();
+    res.status(200).json({
+      status: "success",
+      data: count,
+      message: "Get count of recipes successsful"
+    })
+  } catch (error) {
+    console.error('Error fetching the number of recipes:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
 //@desc Getting all recipes
 //@route GET api/recipes
 const getAllRecipes = asyncHandler(async (req, res) => {
@@ -201,6 +217,7 @@ const deleteRecipe = asyncHandler(async (req, res) => {
 //
 
 module.exports = {
+  getCount,
   getAllRecipes,
   getSingleRecipe,
   createNewRecipe,

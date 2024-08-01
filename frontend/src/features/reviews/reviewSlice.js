@@ -11,6 +11,17 @@ const initialState = {
   message: '',
 }
 
+export const getCount = createAsyncThunk('reviews/count',
+  async (_, thunkAPI) => {
+    try {
+      return await reviewService.getCount()
+    } catch (error) {
+      const message = error.response.data.message || error.message;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+)
+
 export const getReviews = createAsyncThunk('reviews/getAll',
   async({recipe_id, index, count}, thunkAPI) => {
     try{
@@ -65,6 +76,19 @@ export const reviewSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getCount.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getCount.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.count = action.payload.data
+      })
+      .addCase(getCount.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
       .addCase(getReviews.pending, (state) => {
         state.isLoading = true
       })

@@ -3,6 +3,7 @@ import recipeService from "./recipeService"
 import { toast } from 'react-toastify'
 const initialState = {
   recipes: [],
+  count: 0,
   single: [], 
   likes: '',
   usersaved: [],
@@ -11,6 +12,17 @@ const initialState = {
   isLoading: false,
   message: '',
 }
+
+export const getCount = createAsyncThunk('recipes/count',
+  async (_, thunkAPI) => {
+    try {
+      return await recipeService.getCount()
+    } catch (error) {
+      const message = error.response.data.message || error.message;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+)
 
 export const getRecipes = createAsyncThunk('recipes/getmult',
   async ({params, index}, thunkAPI) => {
@@ -132,6 +144,19 @@ export const recipeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    .addCase(getCount.pending, (state) => {
+      state.isLoading = true
+    })
+    .addCase(getCount.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.isSuccess = true
+      state.count = action.payload.data
+    })
+    .addCase(getCount.rejected, (state, action) => {
+      state.isLoading = false
+      state.isError = true
+      state.message = action.payload
+    })
       .addCase(getRecipes.pending, (state) => {
         state.isLoading = true
       })

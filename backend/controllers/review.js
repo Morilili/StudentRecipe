@@ -4,6 +4,22 @@ const Review = require('../models/reviewmodels')
 const Recipe = require('../models/recipemodels')
 const User = require('../models/usermodels')
 
+//@desc Get the number of reviews
+//@route GET api/reviews/count
+const getCount = asyncHandler(async(req,res) => {
+  try {
+    const count = await Review.countDocuments();
+    res.status(200).json({
+      status: "success",
+      data: count,
+      message: "Get count of reviews successsful"
+    })
+  } catch (error) {
+    console.error('Error fetching the number of reviews:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
 //@desc Getting the reviews for the particualar recipe
 //@route GET api/reviews/:recipe_id
 const getReviews = asyncHandler(async (req, res) => {
@@ -82,6 +98,7 @@ const deleteReview = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
+  getCount,
   getReviews,
   getnumReviews,
   postReview,

@@ -189,6 +189,18 @@ const editUser = asyncHandler(async(req, res, next) => {
   }
 
   const updated = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  if (updated.role === "Admin"){
+    res.status(200).json({
+      status: "success",
+      data: {
+        _id: updated.id,
+        name: updated.name,
+        role: "Admin", 
+        token: generateToken(updated._id)
+      }, 
+      message: 'Admin verification Successful'
+    })
+  } else {
   res.status(200).json({
     status: "success",
     data: {
@@ -198,7 +210,7 @@ const editUser = asyncHandler(async(req, res, next) => {
       token: generateToken(updated._id)
     }, 
     message: "Updated user information"
-  });
+  })};
 })
 
 //@desc delete user

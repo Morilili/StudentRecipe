@@ -2,6 +2,11 @@ import axios from 'axios'
 
 const API_URL = '/api/reviews/'
 
+const getCount = async() => {
+  const response = await axios.get(API_URL + 'count')
+  return response.data
+}
+
 const getReviews = async(recipe_id, index, count) => {
   const offset = (count - ((index + 1) * 6)) > 0 ? (count - ((index + 1) * 6)) : 0
   const limit = 6 + (count - ((index + 1) * 6))
@@ -50,6 +55,7 @@ const deleteReview = async(review_id, token) => {
 }
 
 const reviewService = {
+  getCount,
   getReviews,
   getnumReviews,
   postReview,

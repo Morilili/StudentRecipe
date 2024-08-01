@@ -2,6 +2,11 @@ import axios from 'axios'
 
 const API_URL = '/api/recipes/'
 
+const getCount = async() => {
+  const response = await axios.get(API_URL + 'count')
+  return response.data
+}
+
 const getRecipes = async(params, index) => {
   var url = API_URL + '?'
   if (params.length != 0){
@@ -94,6 +99,7 @@ const deleteRecipe = async(recipe_id,token) => {
 }
 
 const recipeService = {
+  getCount,
   getRecipes,
   getSingleRecipe,
   getLikeStatus,
