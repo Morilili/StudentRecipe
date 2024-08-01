@@ -7,6 +7,7 @@ import { adminVerify, logout, reset } from '../../features/auth/authSlice'
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Recipe from './pages/Recipes';
+import Settings from './pages/Settings';
 import Spinner from '../../components/Spinner'
 
 function AdminDashboard() {
@@ -40,10 +41,8 @@ function AdminDashboard() {
               return <Users />;
           case 'Recipes':
               return <Recipe />;
-          case 'Reviews':
-              return <div>review</div>
           case 'Settings':
-              return <div>Settings Content</div>;
+              return <Settings />;
           case 'Logout':
               return <button className='btn btn-primary btn-lg' onClick={onLogout}> Logout </button>
           default:
