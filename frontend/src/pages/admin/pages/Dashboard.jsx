@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { getUsers, reset } from '../../../features/auth/authSlice'
 import InfoCard from '../components/InfoCard';
@@ -28,10 +28,11 @@ const Dashboard = () => {
   
   if (!isLoading && !isError && Users.length === 0 ) {
     dispatch(getUsers("User"))
-    dispatch(getRecipeCount())
-    dispatch(getRecipeCount())
   }
-  
+  useEffect(() => {
+    dispatch(getRecipeCount())
+    dispatch(getRecipeCount())
+  }, [])
 
 
   return (

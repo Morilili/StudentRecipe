@@ -7,6 +7,7 @@ import { ToastContainer, toast} from 'react-toastify'
 import { getRecipes, resetRecipe} from '../features/recipes/recipeSlice';
 import Spinner from '../components/Spinner'
 import Loader from '../components/Loader'
+import "./css/RecipeCards.css"
 
 function Recipe(){
   const navigate = useNavigate()
@@ -73,9 +74,9 @@ function Recipe(){
       }
     >
       <div>
-        <section assName='content'>
+        <section className='content'>
           {recipes.length > 0 ? (
-            <div className='_________'>
+            <div className='card-container'>
               {recipes.map((recipe) => (
                 <RecipeCard key={recipe._id} recipe={recipe} />
               ))} 

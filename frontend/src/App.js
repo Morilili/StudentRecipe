@@ -12,14 +12,13 @@ import NotFound from './pages/NotFound'
 import { ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import withAdminAuth from './helper/withAdminAuth'
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import '@mantine/core/styles.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'
 function App() {
   const location = window.location.pathname;
   
   return (
-    <>
+    <div className="pretty-container">
       <Router>
         {location.slice(0,6) !== '/admin' ? (
           <div className='container'>
@@ -45,7 +44,7 @@ function App() {
           </div>
         )}
       </Router>
-    </>
+    </div>
   );
 }
 

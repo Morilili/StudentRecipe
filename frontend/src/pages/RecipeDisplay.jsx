@@ -9,6 +9,7 @@ import { getReviews, postReview, resetReview, getnumReviews } from '../features/
 import InfiniteScroll from "react-infinite-scroll-component"
 import Spinner from '../components/Spinner'
 import Loader from '../components/Loader'
+import './css/RecipeDisplay.css'
 
 function RecipeDisplay() {
   const { user } = useSelector((state) => state.auth)
@@ -172,9 +173,6 @@ function RecipeDisplay() {
   const recipe = single.data
 
 
-  //lazy loading 
-  // const ReviewCard = React.lazy(() => import('../components/ReviewCard'))
-
   
   if (isLoading) {
     return <Spinner />
@@ -197,13 +195,14 @@ function RecipeDisplay() {
         }}>
         </div>
       )}
-      <h1>{recipe && recipe.name}</h1>
+      <h1 className="recipe-title">{recipe && recipe.name}</h1>
+      <div className="image-container">
       {recipe && recipe.images.map((image, index) => (
-              <img key={index}
-              src={`/backend/uploads/${image}`}
-              height={100}
-              width={100}></img>
-            ))} 
+        <div key={index} className="image-wrapper">
+          <img src={`/backend/uploads/${image}`} className="recipe-image" alt={`Recipe Image ${index + 1}`} />
+        </div>
+      ))}
+      </div>
       {user && 
         <div>
           <button onClick={handleLike} style={{ backgroundColor: likes ===  'liked' ? 'green' : 'grey' }}>Like</button>
@@ -211,15 +210,15 @@ function RecipeDisplay() {
           <button onClick={handleSaveRecipe} style={{ backgroundColor: isSaved ? 'yellow' : '' }}>{isSaved ? '☆ Saved' : 'Save Recipe'}</button>
         </div>
       }
-      <div>
+      <div className="recipe-details">
         <h3>Ingredients</h3>
-        <ul>
+        <ul className="ingredients-list">
           {recipe && recipe.ingredients.map((ingredient, index) => (
             <li key={index}>{ingredient}</li>
           ))}
         </ul>
         <h3>Directions</h3>
-        <ol>
+        <ol className="directions-list">
           {recipe && recipe.directions.map((direction, index) => (
             <li key={index}>{direction}</li>
           ))}

@@ -1,0 +1,54 @@
+.recipe-title {
+  font-size: 3rem; /* Large font size */
+  font-weight: bold; /* Bold text */
+  color: #333; /* Dark color */
+  text-align: center; /* Centered text */
+  margin: 20px 0; /* Space around the title */
+  text-transform: uppercase; /* Uppercase letters */
+  letter-spacing: 2px; /* Spacing between letters */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Shadow effect */
+  font-family: 'Georgia', serif; /* Elegant font */
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between images */
+}
+
+/* Image wrapper to maintain aspect ratio */
+.image-wrapper {
+  position: relative;
+  width: calc(33.33% - 20px); /* Default size for larger screens */
+  padding-top: calc((33.33% - 20px) * 0.75); /* 4:3 Aspect Ratio */
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Recipe image styling */
+.recipe-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .image-wrapper {
+    width: calc(50% - 20px); /* Adjust this value to control the size of the images */
+    padding-top: calc((50% - 20px) * 0.75); /* 4:3 Aspect Ratio */
+  }
+}
+
+@media (max-width: 480px) {
+  .image-wrapper {
+    width: calc(100% - 20px); /* Adjust this value to control the size of the images */
+    padding-top: calc((100% - 20px) * 0.75); /* 4:3 Aspect Ratio */
+  }
+}
+

@@ -16,8 +16,8 @@ function RecipeCard({ recipe }) {
         <div className='bgImage'/>
           <img           
             src={`/backend/uploads/${recipe.images[0]}`}
-            height={100}
-            width={100}
+            height={300}
+            width={300}
           />
           <h3>{recipe.name}</h3>
       </div>

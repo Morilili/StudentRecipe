@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { toast } from 'react-toastify'
-
+import '../pages/css/Header.css'
 function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
