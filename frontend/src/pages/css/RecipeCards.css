@@ -3,6 +3,9 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust the min width as needed */
   gap: 16px; /* Adjust the gap between cards as needed */
   overflow: hidden; /* Hide overflowing content */
+  width: 100vw; /* Use the full width of the viewport */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
 }
 
 .card {
@@ -32,4 +35,29 @@
 .card h3 {
   margin-top: 8px;
   text-align: center;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 1200px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust the min width as needed */
+  }
+}
+
+@media (max-width: 992px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust the min width as needed */
+  }
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust the min width as needed */
+  }
+}
+
+@media (max-width: 576px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Adjust the min width as needed */
+  }
 }
