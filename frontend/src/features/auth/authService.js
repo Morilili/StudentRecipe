@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = '/api/users/'
+const API_URL = 'https://student-recipe-morris-backend.vercel.app/api/users/'
 
 //Get users
 const getUsers = async(role, token) => {

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = '/api/recipes/'
+const API_URL = 'https://student-recipe-morris-backend.vercel.app/api/recipes/'
 
 const getCount = async() => {
   const response = await axios.get(API_URL + 'count')
