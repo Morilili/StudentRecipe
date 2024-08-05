@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path')
 const colors = require('colors');
 const dotenv = require('dotenv').config();
+var cors = require('cors')
 const { rateLimit } = require('express-rate-limit')
 const { connectDB } = require('./config/db'); 
 const { errorHandler } = require('./middleware/error');
@@ -20,6 +21,12 @@ const limiter = rateLimit({
 
 const app = express();
 
+const corsOptions ={
+	origin:'https://student-recipe-morris-backend.vercel.app', 
+	credentials:true,            //access-control-allow-credentials:true
+	optionSuccessStatus:200
+}
+app.use(cors(corsOptions))
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 // app.use(limiter)

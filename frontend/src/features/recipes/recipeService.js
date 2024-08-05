@@ -16,6 +16,7 @@ const getRecipes = async(params, index) => {
   
   url += `&offset=${index}0&limit=10`
   const response = await axios.get(url)
+  console.log(response)
   return response.data
 }
 
