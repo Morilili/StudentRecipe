@@ -2,8 +2,7 @@ const express = require('express');
 const path = require('path')
 const colors = require('colors');
 const dotenv = require('dotenv').config();
-var cors = require('cors')
-const { rateLimit } = require('express-rate-limit')
+const cors = require("cors")
 const { connectDB } = require('./config/db'); 
 const { errorHandler } = require('./middleware/error');
 
@@ -11,25 +10,13 @@ const port = process.env.PORT || 5000;
 
 connectDB();
 
-const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-	// store: ... , // Redis, Memcached, etc. See below.
-})
-
 const app = express();
 
-const corsOptions ={
-	origin:'https://student-recipe-morris-backend.vercel.app', 
-	credentials:true,            //access-control-allow-credentials:true
-	optionSuccessStatus:200
-}
-app.use(cors(corsOptions))
+app.use(cors());
+app.options('*', cors());
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
-// app.use(limiter)
 app.use("/backend/uploads",express.static(path.join(__dirname + "/uploads")));
 
 app.use(errorHandler)
