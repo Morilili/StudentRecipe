@@ -39,7 +39,7 @@ function RecipeCard({ recipe, onEditRecipe, onEditClick  }) {
       }}>
         <div style={{ flex: '1 1 100px', marginRight: '20px', marginBottom: '10px' }}>
           <img
-            src={`/backend/uploads/${recipe.images[0]}`}
+            src={`https://student-recipe-morris-backend.vercel.app/backend/uploads/${recipe.images[0]}`}
             alt={recipe.name}
             style={{ height: '100px', width: '100px', objectFit: 'cover', borderRadius: '8px' }}
           />

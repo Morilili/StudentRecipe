@@ -15,7 +15,7 @@ function RecipeCard({ recipe }) {
       <div>
         <div className='bgImage'/>
           <img           
-            src={`/backend/uploads/${recipe.images[0]}`}
+            src={`https://student-recipe-morris-backend.vercel.app/backend/uploads/${recipe.images[0]}`}
             height={300}
             width={300}
           />

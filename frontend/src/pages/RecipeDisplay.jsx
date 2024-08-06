@@ -199,7 +199,7 @@ function RecipeDisplay() {
       <div className="image-container">
       {recipe && recipe.images.map((image, index) => (
         <div key={index} className="image-wrapper">
-          <img src={`/backend/uploads/${image}`} className="recipe-image" alt={`Recipe Image ${index + 1}`} />
+          <img src={`https://student-recipe-morris-backend.vercel.app/backend/uploads/${image}`} className="recipe-image" alt={`Recipe Image ${index + 1}`} />
         </div>
       ))}
       </div>
