@@ -1,0 +1,31 @@
+version: "3"
+services:
+  react-app:
+    image: react-app
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - studentrecipe
+
+  api-server:
+    image: api-server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    networks:
+      - studentrecipe
+
+  mongodb:
+    image: "mongo"
+    networks:
+      - studentrecipe
+
+networks:
+  studentrecipe:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
